@@ -1,8 +1,8 @@
 # Connor Murphy — Personal Website
 
-Live site: [ConnorMurphy04.github.io](https://ConnorMurphy04.github.io)
+Live site: [connormurphy04.github.io](https://connormurphy04.github.io)
 
-Personal portfolio built with  HTML and CSS. Showcases my projects,
+Personal portfolio built with vanilla HTML and CSS. Showcases my projects,
 skills, and experience as a CS student at Willamette University.
 
 ## Built With
@@ -27,4 +27,3 @@ open index.html
 
 ## Contact
 cmurph1999@icloud.com
-Telephone: (760) 895-8971
