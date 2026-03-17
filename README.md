@@ -1,6 +1,6 @@
 # Connor Murphy — Personal Website
 
-Live site: [connormurphy.github.io](https://connormurphy.github.io)
+Live site: [ConnorMurphy04.github.io](https://ConnorMurphy04.github.io)
 
 Personal portfolio built with  HTML and CSS. Showcases my projects,
 skills, and experience as a CS student at Willamette University.
@@ -20,8 +20,8 @@ skills, and experience as a CS student at Willamette University.
 ## Local Development
 Clone the repo and open `index.html` in a browser — no build step required.
 ```bash
-git clone https://github.com/your-username/your-username.github.io.git
-cd your-username.github.io
+git clone https://github.com/ConnorMurphy04/ConnorMurphy04.github.io.git
+cd ConnorMurphy04.github.io
 open index.html
 ```
 
