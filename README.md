@@ -1,6 +1,6 @@
 # Connor Murphy — Personal Website
 
-Live site: [connormurphy04.github.io](https://connormurphy04.github.io)
+Live site: [ConnorMurphy04.github.io](https://connormurphy04.github.io)
 
 Personal portfolio built with vanilla HTML and CSS. Showcases my projects,
 skills, and experience as a CS student at Willamette University.
