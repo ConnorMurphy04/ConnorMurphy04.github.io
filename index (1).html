@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connor Murphy — CS & Golf</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #1a3a2a;
+      --fairway: #2d5a3d;
+      --grass: #4a8c5c;
+      --flag: #c8a96e;
+      --cream: #f5f0e8;
+      --sand: #e8dcc8;
+      --ink: #1a1a18;
+      --muted: #6b6b5e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      background: var(--green);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* fairway texture lines */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        170deg,
+        transparent,
+        transparent 60px,
+        rgba(255,255,255,0.03) 60px,
+        rgba(255,255,255,0.03) 61px
+      );
+      pointer-events: none;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .nav-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--flag);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--flag); }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem 4rem 4rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--flag);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 9vw, 8rem);
+      color: var(--cream);
+      line-height: 0.95;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.4s forwards;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--flag);
+    }
+
+    .hero-sub {
+      max-width: 500px;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.6s forwards;
+    }
+
+    .hero-cta {
+      margin-top: 3rem;
+      display: flex;
+      gap: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.8s forwards;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.85rem 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid;
+      transition: all 0.25s;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--flag);
+      border-color: var(--flag);
+      color: var(--green);
+    }
+    .btn-primary:hover { background: transparent; color: var(--flag); }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.7);
+    }
+    .btn-ghost:hover { border-color: var(--flag); color: var(--flag); }
+
+    /* flag decoration */
+    .hero-flag {
+      position: absolute;
+      right: 6rem;
+      bottom: 0;
+      width: 3px;
+      height: 55vh;
+      background: rgba(255,255,255,0.15);
+      opacity: 0;
+      animation: fadeIn 1s ease 1.2s forwards;
+    }
+    .hero-flag::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 3px;
+      width: 60px; height: 35px;
+      background: var(--flag);
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+    }
+
+    .scroll-hint {
+      padding: 2rem 4rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeIn 1s ease 1.4s forwards;
+    }
+    .scroll-hint span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      flex: 1;
+      max-width: 80px;
+      height: 1px;
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 7rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      color: var(--grass);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.1;
+      margin-bottom: 3rem;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--muted);
+      margin-bottom: 1.2rem;
+    }
+
+    .about-text p strong { color: var(--ink); font-weight: 500; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5px;
+      background: var(--sand);
+    }
+
+    .stat-box {
+      background: var(--cream);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      color: var(--fairway);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── SKILLS ── */
+    #skills { background: var(--green); max-width: 100%; padding: 7rem 4rem; }
+    #skills > * { max-width: 1100px; margin-left: auto; margin-right: auto; }
+    #skills .section-label { color: var(--flag); }
+    #skills h2 { color: var(--cream); }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1px;
+      background: rgba(255,255,255,0.08);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .skill-card {
+      background: var(--green);
+      padding: 2rem;
+      transition: background 0.2s;
+    }
+
+    .skill-card:hover { background: var(--fairway); }
+
+    .skill-category {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--flag);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .skill-list {
+      list-style: none;
+    }
+
+    .skill-list li {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+      padding: 0.3rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-family: 'DM Mono', monospace;
+    }
+    .skill-list li:last-child { border-bottom: none; }
+
+    /* ── PROJECTS ── */
+    .projects-list { display: flex; flex-direction: column; gap: 1.5px; background: var(--sand); }
+
+    .project-item {
+      background: var(--cream);
+      padding: 2.5rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: start;
+      transition: background 0.2s;
+      cursor: default;
+    }
+
+    .project-item:hover { background: #ede8df; }
+
+    .project-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 560px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: flex-end;
+      align-items: flex-start;
+    }
+
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--grass);
+      color: var(--fairway);
+    }
+
+    /* ── EXPERIENCE ── */
+    .exp-timeline { display: flex; flex-direction: column; gap: 0; }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 2rem;
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--sand);
+    }
+    .exp-item:last-child { border-bottom: none; }
+
+    .exp-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      padding-top: 0.25rem;
+    }
+
+    .exp-role {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .exp-org {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--grass);
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .exp-details {
+      list-style: none;
+    }
+
+    .exp-details li {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.65;
+      padding-left: 1rem;
+      position: relative;
+      margin-bottom: 0.3rem;
+    }
+    .exp-details li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--flag);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--ink);
+      max-width: 100%;
+      padding: 7rem 4rem;
+      text-align: center;
+    }
+    #contact .section-label { color: var(--flag); }
+    #contact h2 { color: var(--cream); margin-bottom: 1.5rem; }
+    #contact p { color: rgba(255,255,255,0.5); font-size: 1rem; margin-bottom: 3rem; }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      padding-bottom: 0.25rem;
+      transition: all 0.2s;
+    }
+    .contact-link:hover { color: var(--flag); border-color: var(--flag); }
+
+    footer {
+      background: var(--ink);
+      text-align: center;
+      padding: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    footer p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.2);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav, section, .hero-content, .scroll-hint { padding-left: 1.5rem; padding-right: 1.5rem; }
+      #skills, #contact { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .project-item { grid-template-columns: 1fr; }
+      .project-tags { justify-content: flex-start; }
+      .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+      .hero-flag { display: none; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <nav>
+    <div class="nav-logo">Connor J. Murphy</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Computer Science · Golf · Builder</p>
+    <h1>Connor<br/><em>Murphy</em></h1>
+    <p class="hero-sub">
+      CS student at Willamette University, graduating May 2026.
+      I build full-stack apps, dig into data, and study Linux systems, 
+      on and off the fairway.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll to explore</span>
+  </div>
+
+  <div class="hero-flag"></div>
+</header>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <p class="section-label">// 01 — About</p>
+  <h2>Developer.<br/>Analyst. Athlete.</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        I'm a <strong>Computer Science student at Willamette University</strong> in Salem, Oregon,
+        on track to graduate in May 2026. My focus sits in the areas of
+        <strong>full-stack development, data analysis, and Linux system administration</strong>.
+      </p>
+      <p>
+        I'm drawn to projects that serve to make a real-world impact —
+        whether that's a social golf platform, a data-driven performance model, or
+        an efficient university parking system.
+      </p>
+      <p>
+        Outside of code, I compete as an <strong>NCAA student-athlete</strong> on Willamette's
+        Men's Golf Team and served as Philanthropy Chair for Sigma Chi, organizing
+        on- and off-campus fundraising.
+      </p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="stat-num">7+</div>
+        <div class="stat-label">Projects Built</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">10k+</div>
+        <div class="stat-label">Rows Analyzed</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">5+</div>
+        <div class="stat-label">Languages</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">'26</div>
+        <div class="stat-label">Graduation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SKILLS ── -->
+<div id="skills">
+  <section style="padding:0; max-width:1100px; margin:0 auto;">
+    <p class="section-label">// 02 — Skills</p>
+    <h2>What I Work With</h2>
+  </section>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-category">Languages</div>
+      <ul class="skill-list">
+        <li>Python</li>
+        <li>SQL</li>
+        <li>Java</li>
+        <li>C / C#</li>
+        <li>HTML / CSS</li>
+      </ul>
+    </div>
+    <div class="skill-card">
+      <div class="skill-category">Frameworks & Tools</div>
+      <ul class="skill-list">
+        <li>React Native</li>
+        <li>Firebase</li>
+        <li>Expo</li>
+        <li>Unity</li>
+        <li>Git / GitHub</li>
+      </ul>
+    </div>
+    <div class="skill-card">
+      <div class="skill-category">Systems</div>
+      <ul class="skill-list">
+        <li>Linux Ubuntu</li>
+        <li>Linux Sys Admin</li>
+        <li>Command-Line Tools</li>
+        <li>Shell Scripting</li>
+      </ul>
+    </div>
+    <div class="skill-card">
+      <div class="skill-category">Concepts</div>
+      <ul class="skill-list">
+        <li>Data Structures & Algorithms</li>
+        <li>Database Design</li>
+        <li>Full-Stack Development</li>
+        <li>UI/UX Research & HCI</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ── PROJECTS ── -->
+<section id="projects">
+  <p class="section-label">// 03 — Projects</p>
+  <h2>Projects and Developments</h2>
+  <div class="projects-list">
+
+    <div class="project-item">
+      <div>
+        <div class="project-name">Social Golf Mobile App</div>
+        <p class="project-desc">
+          Co-developed a full-stack mobile and web golf social platform featuring
+          authentication, Firebase backend, user profiles, posting features, and
+          persistent data across 3+ pages. Built with real-time state management
+          inside Expo and shipped via Git-based iterative deployment.
+        </p>
+      </div>
+      <div class="project-tags">
+        <span class="tag">Java</span>
+        <span class="tag">React Native</span>
+        <span class="tag">Firebase</span>
+        <span class="tag">Expo</span>
+      </div>
+    </div>
+
+    <div class="project-item">
+      <div>
+        <div class="project-name">PGA Tour Data Analysis</div>
+        <p class="project-desc">
+          Cleaned and normalized a 10,000+ row, 50+ column dataset of PGA Tour stats.
+          Ran complex SQL queries including: joins, aggregations, trend analysis in order to find
+          correlations between driving accuracy, putting, and earnings. Used findings
+          to model breakout and regression candidates.
+        </p>
+      </div>
+      <div class="project-tags">
+        <span class="tag">SQL</span>
+        <span class="tag">Data Analysis</span>
+      </div>
+    </div>
+
+    <div class="project-item">
+      <div>
+        <div class="project-name">PitStop.com — E-Commerce Platform</div>
+        <p class="project-desc">
+          Built a dynamic multi-page automotive web store with a product catalog,
+          functional shopping cart, SQL-backed database, and administrative dashboard.
+          Designed for responsive layout and clean navigation architecture.
+        </p>
+      </div>
+      <div class="project-tags">
+        <span class="tag">HTML/CSS</span>
+        <span class="tag">PHP</span>
+        <span class="tag">SQL</span>
+      </div>
+    </div>
+
+    <div class="project-item">
+      <div>
+        <div class="project-name">Parking System UX Optimization</div>
+        <p class="project-desc">
+          Led a team redesign of the university parking system using high-fidelity
+          interactive prototypes. Ran usability testing, heuristic evaluations, and
+          structured user interviews. Improved lot traffic distribution through
+          digital map visualization.
+        </p>
+      </div>
+      <div class="project-tags">
+        <span class="tag">Python</span>
+        <span class="tag">HTML</span>
+        <span class="tag">HCI / UX</span>
+      </div>
+    </div>
+
+    <div class="project-item">
+      <div>
+        <div class="project-name">NYT Connections Replica</div>
+        <p class="project-desc">
+          Recreated the NYT Connections word puzzle using hash tables, dictionaries,
+          and optimized lookup structures. Focused on efficient word grouping,
+          search performance, and interactive validation logic.
+        </p>
+      </div>
+      <div class="project-tags">
+        <span class="tag">Python</span>
+        <span class="tag">Data Structures</span>
+      </div>
+    </div>
+
+    <div class="project-item">
+      <div>
+        <div class="project-name">Trie Command-Line Application</div>
+        <p class="project-desc">
+          Implemented a Trie (prefix tree) from scratch supporting insert, delete,
+          search, prefix autocomplete, and word counting. Designed recursive deletion
+          that preserves shared prefixes, with result limiting for CLI usability.
+        </p>
+      </div>
+      <div class="project-tags">
+        <span class="tag">Python</span>
+        <span class="tag">Algorithms</span>
+      </div>
+    </div>
+
+    <div class="project-item">
+      <div>
+        <div class="project-name">Unity Game Development</div>
+        <p class="project-desc">
+          Developed and published 2D and 3D games using the Unity physics engine.
+          Implemented AI-driven movement and environmental scanning behaviors.
+          Shipped downloadable builds for demonstration and testing.
+        </p>
+      </div>
+      <div class="project-tags">
+        <span class="tag">C#</span>
+        <span class="tag">Unity</span>
+        <span class="tag">AI/Behavior</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── EXPERIENCE ── -->
+<section id="experience">
+  <p class="section-label">// 04 — Experience</p>
+  <h2>Where I've Worked</h2>
+  <div class="exp-timeline">
+
+    <div class="exp-item">
+      <div class="exp-date">2022 — Present</div>
+      <div>
+        <div class="exp-role">Legal Assistant</div>
+        <div class="exp-org">Slovak, Baron, Empey, Murphy & Pinkney, LLP — Indian Wells, CA</div>
+        <ul class="exp-details">
+          <li>Conduct fact-based research to support litigation and new client engagements</li>
+          <li>Prepare engagement documentation and manage digital case organization</li>
+          <li>Coordinate attorney communications for case preparation workflows</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-date">2022 — 2024</div>
+      <div>
+        <div class="exp-role">Multiple Roles</div>
+        <div class="exp-org">Willamette University — Salem, OR</div>
+        <ul class="exp-details">
+          <li>Sideline Monitor: relayed player stats to official scorekeeper and announcer</li>
+          <li>Security Attendant: managed access to on-campus secure parking</li>
+          <li>Dining Hall: food and beverage service and kitchen support</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-date">2020 — 2022</div>
+      <div>
+        <div class="exp-role">Event Support Specialist</div>
+        <div class="exp-org">At Work Staffing Agency — Palm Desert, CA</div>
+        <ul class="exp-details">
+          <li>Placed with various employers for private events and corporate meetings</li>
+          <li>Roles included food service, location security, valet, and traffic coordination</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<div id="contact">
+  <section style="padding:0; max-width:700px; margin:0 auto; text-align:center;">
+    <p class="section-label">// 05 — Contact</p>
+    <h2>Let's Connect</h2>
+    <p>Open to internships, collaborations, and conversations about full-stack, data, or Linux projects.</p>
+    <div class="contact-links">
+      <a href="mailto:cmurph1999@icloud.com" class="contact-link">cmurph1999@icloud.com</a>
+      <a href="tel:7608958971" class="contact-link">760-895-8971</a>
+      <a href="https://github.com/ConnorMurphy04" class="contact-link" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/connor-murphy-42a9353b3/" class="contact-link" target="_blank">LinkedIn</a>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <p>© 2026 Connor J. Murphy — Built with HTML, CSS & intention.</p>
+</footer>
+
+</body>
+</html>
